@@ -42,3 +42,6 @@ Asignatura impartida por el **Departamento de Ingeniería Eléctrica, Electróni
 Este repositorio tiene finalidad exclusivamente docente.
 
 Si detectas algún error o tienes alguna sugerencia de mejora, puedes comunicarlo al profesorado de la asignatura.
+
+
+Este trabajo del tenis consistirá mediante ubuntu y en la terminal, realizar un juego entre redes del tenis, nos encontramos actualmente en la primera parte del proyecto
