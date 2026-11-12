@@ -1,17 +1,20 @@
+#ifndef RAQUETA_H
+#define RAQUETA_H
+
 // Raqueta.h: interface for the Raqueta class.
-//
-//////////////////////////////////////////////////////////////////////
 
 #include "Plano.h"
 #include "Vector2D.h"
 
-class Raqueta : public Plano  
+class Raqueta : public Plano
 {
 public:
-	Vector2D velocidad;
+    Vector2D velocidad;
 
-	Raqueta();
-	virtual ~Raqueta();
+    Raqueta();
+    virtual ~Raqueta();
 
-	void Mueve(float t);
+    void Mueve(float t);
 };
+
+#endif

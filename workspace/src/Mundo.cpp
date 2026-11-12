@@ -11,7 +11,8 @@
 #include <math.h>
 #include <fcntl.h>
 #include <unistd.h>
-
+#include <sys/mman.h>
+#include <sys/stat.h>
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -24,6 +25,7 @@ CMundo::CMundo()
 
 CMundo::~CMundo()
 {
+munmap(datos, sizeof(DatosMemCompartida));
 close(fd_fifo);
 }
 
@@ -118,6 +120,23 @@ void CMundo::OnDraw()
 
 void CMundo::OnTimer(int value)
 {	
+
+datos->esfera = esfera;
+datos->raqueta1 = jugador1;
+
+if (datos->accion == 1)
+{
+    OnKeyboardDown('w', 0, 0);
+}
+else if (datos->accion == -1)
+{
+    OnKeyboardDown('s', 0, 0);
+}
+else
+{
+    jugador1.velocidad.y = 0;
+}
+
 	jugador1.Mueve(0.025f);
 	jugador2.Mueve(0.025f);
 	esfera.Mueve(0.025f);
@@ -213,11 +232,38 @@ void CMundo::Init()
 	jugador2.g=0;
 	jugador2.x1=6;jugador2.y1=-1;
 	jugador2.x2=6;jugador2.y2=1;
+int fd_mem = open("memoria", O_RDWR | O_CREAT, 0666);
+
+if (fd_mem < 0) {
+    perror("Error al abrir memoria");
+    exit(1);
+}
+
+ftruncate(fd_mem, sizeof(DatosMemCompartida));
+
+datos = (DatosMemCompartida *) mmap(
+    NULL,
+    sizeof(DatosMemCompartida),
+    PROT_READ | PROT_WRITE,
+    MAP_SHARED,
+    fd_mem,
+    0
+);
+
+if (datos == MAP_FAILED) {
+    perror("Error en mmap");
+    close(fd_mem);
+    exit(1);
+}
+
+close(fd_mem);
+
+datos->accion = 0;
+
 fd_fifo = open("fifo", O_WRONLY);
 
 if (fd_fifo < 0) {
     perror("No se puede abrir la FIFO para escritura");
     exit(1);
 }
-
 }
